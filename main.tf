@@ -23,22 +23,22 @@ resource "yandex_iam_service_account" "sa" {
 }
 
 # Grant permissions
-resource "yandex_resourcemanager_folder_iam_member" "sa-editor" {
+resource "yandex_resourcemanager_folder_iam_member" "sa_editor" {
   folder_id = var.folder_id
   role      = "storage.editor"
   member    = "serviceAccount:${yandex_iam_service_account.sa.id}"
 }
 
 # Create Static Access Keys
-resource "yandex_iam_service_account_static_access_key" "sa-static-key" {
+resource "yandex_iam_service_account_static_access_key" "sa_static_key" {
   service_account_id = yandex_iam_service_account.sa.id
   description        = "static access key for object storage"
 }
 
 # Use keys to create bucket
-resource "yandex_storage_bucket" "tf-state-gdjagsdukagdhakdh" {
-  access_key    = yandex_iam_service_account_static_access_key.sa-static-key.access_key
-  secret_key    = yandex_iam_service_account_static_access_key.sa-static-key.secret_key
+resource "yandex_storage_bucket" "tf_sb" {
+  access_key    = yandex_iam_service_account_static_access_key.sa_static_key.access_key
+  secret_key    = yandex_iam_service_account_static_access_key.sa_static_key.secret_key
   bucket_prefix = "tf-bucket-"
   force_destroy = true
 }
